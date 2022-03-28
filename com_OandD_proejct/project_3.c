@@ -48,7 +48,7 @@ int invertEndian (int inputValue) {  //endian이 바뀐 데이터를 반환하�
             return ((int)i1 << 24) + ((int)i2 << 16) + ((int)i3 << 8) + i4;
 }
 }
-void memoryRead(unsigned int data)
+void memoryRead(int cnt,unsigned int data)
 {
     char b[9];
     char res[32] ="";
@@ -70,13 +70,23 @@ void memoryRead(unsigned int data)
     //func
     strncpy(funccode,&res[26],6);
     funccode[6] = '\0';
-    if(strcmp(opcode, optab[0].len)==0){  // opcode == 000000
+    if(cnt==0){
+        // char chHex[]=MEM[4];
+        unsigned int nResult = 0;
+        nResult = strtol(MEM[3], NULL, 16);
+        printf("Number of instructions: %d",nResult);
+    }else if(cnt==4){
+        // char chHex[]=MEM[8];
+        unsigned int nResult = 0;
+        nResult = strtol(MEM[7], NULL, 16);
+        printf("Number of data: %d",nResult);
+    }else{
+        if(strcmp(opcode, optab[0].len)==0){  // opcode == 000000
         for(int k=0; k<sizeof(functab); k++){
-        if(strcmp(funccode,functab[k].len)==0){
-            printf("Opc: %s, Fct: %s, Inst: %s ", optab[0].pt,functab[k].pt,functab[k].name);
+            if(strcmp(funccode,functab[k].len)==0){
+                printf("Opc: %s, Fct: %s, Inst: %s ", optab[0].pt,functab[k].pt,functab[k].name);
             }
-
-    }
+            }
     }else if(strcmp(opcode, optab[0].len)!=0){
         for(int k=0; k<sizeof(optab); k++){
         if(strcmp(opcode,optab[k].len)==0){ //opcode == optab
@@ -88,7 +98,9 @@ void memoryRead(unsigned int data)
     }
     printf("\n");
 
+    }
 }
+
 void memoryWrite(unsigned int addr, unsigned int data)
 {
     unsigned char i1, i2, i3, i4;
@@ -131,20 +143,9 @@ int main(void){
     exdata = invertEndian(data);
     // printf("%08x\n", exdata);
     memoryWrite(cnt,data);
+    memoryRead(cnt,exdata);
     cnt+=4;
-    if(cnt==0){
-        // char chHex[]=MEM[4];
-        unsigned int nResult = 0;
-        nResult = strtol(MEM[3], NULL, 16);
-        printf("Number of instructions: %d",nResult);
-    }else if(cnt==4){
-        // char chHex[]=MEM[8];
-        unsigned int nResult = 0;
-        nResult = strtol(MEM[7], NULL, 16);
-        printf("Number of data: %d",nResult);
-    }else{
-        memoryRead(exdata);
-    }
+
   }
 
   fclose(pFile);
