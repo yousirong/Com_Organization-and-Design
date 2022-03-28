@@ -36,7 +36,7 @@ else x -= '0';
 return (0 <= x && x <= 15) ? B[x] : NULL;
 }
 
-int invertEndian (int inputValue) {  //endianÀÌ ¹Ù²ï µ¥ÀÌÅÍ¸¦ ¹İÈ¯ÇÏ´Â ÇÔ¼ö
+int invertEndian (int inputValue) {  //endianì´ ë°”ë€ ë°ì´í„°ë¥¼ ë°˜í™˜í•˜ëŠ” í•¨ìˆ˜
     unsigned char i1, i2, i3, i4;
     if (is_bigendian()) {
         return inputValue;
@@ -54,9 +54,9 @@ void memoryRead(unsigned int data)
     char res[32] ="";
     char opcode[6];
     char funccode[6];
-    // ¹®ÀÚ¿­·Î º¯È¯
+    // ë¬¸ìì—´ë¡œ ë³€í™˜
     sprintf(b, "%08x", data);
-    // Ãâ·Â
+    // ì¶œë ¥
     // printf("%s", xtob(b[0]));
     strcat(res,xtob(b[0]));
     for(int i=1; i < 8; i++) {
@@ -119,7 +119,7 @@ int main(void){
   unsigned int data2 = 0x11223344;
   if (pFile==NULL)
   {
-    puts("inputÆÄÀÏ ¿ÀÇÂ ½ÇÆĞ!");
+    puts("inputíŒŒì¼ ì˜¤í”ˆ ì‹¤íŒ¨!");
     return -1;
     }
 
