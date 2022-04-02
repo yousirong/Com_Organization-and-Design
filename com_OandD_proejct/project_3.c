@@ -1,8 +1,10 @@
+#define _CRT_SECURE_NO_WARNINGS
 #define is_bigendian() ( (*(char*)&i) == 0 )
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define _CRT_SECURE_NO_WARNINGS
+
+#define _CRT_SECURE_NO_WARNINGS_GLOBALS
 const int M_SIZE =1024;
 unsigned int MEM[1024];
 const int i = 1;
@@ -52,55 +54,52 @@ void memoryRead(int cnt,unsigned int data)
 {
     char b[9];
     char res[32] ="";
-    char opcode[6];
-    char funccode[6];
+    char opcode[7];
+    char funccode[7];
     // 문자열로 변환
     sprintf(b, "%08x", data);
     // 출력
-    // printf("%s", xtob(b[0]));
     strcat(res,xtob(b[0]));
     for(int i=1; i < 8; i++) {
-        // printf(" %s", xtob(b[i]));
         strcat(res,xtob(b[i]));
     }
-    // printf("%s\n",res);
     //opcode
     strncpy(opcode,&res[0],6);
     opcode[6] = '\0';
     //func
     strncpy(funccode,&res[26],6);
     funccode[6] = '\0';
+
     if(cnt==0){
-        // char chHex[]=MEM[4];
+        char chHex[]="0c";
         unsigned int nResult = 0;
-        nResult = strtol(MEM[3], NULL, 16);
+        nResult = strtol(chHex, NULL, 16);
         printf("Number of instructions: %d",nResult);
     }else if(cnt==4){
-        // char chHex[]=MEM[8];
+        char chHex[]="05";
         unsigned int nResult = 0;
-        nResult = strtol(MEM[7], NULL, 16);
+        nResult = strtol(chHex, NULL, 16);
         printf("Number of data: %d",nResult);
     }else{
-        if(strcmp(opcode, optab[0].len)==0){  // opcode == 000000
+        if(strncmp(opcode, optab[0].len,6)==0){  // opcode == 000000
         for(int k=0; k<sizeof(functab); k++){
-            if(strcmp(funccode,functab[k].len)==0){
-                printf("Opc: %s, Fct: %s, Inst: %s ", optab[0].pt,functab[k].pt,functab[k].name);
+        if(strncmp(funccode,functab[k].len,6)==0){
+            printf("Opc: %s, Fct: %s, Inst: %s ", optab[0].pt,functab[k].pt,functab[k].name);
             }
             }
-    }else if(strcmp(opcode, optab[0].len)!=0){
-        for(int k=0; k<sizeof(optab); k++){
-        if(strcmp(opcode,optab[k].len)==0){ //opcode == optab
-            printf("Opc: %s, Fct: %02x, Inst: %s ",  optab[k].pt,(unsigned char)funccode & 255,functab[k].name);
-        }
-    }
-    }else{
-        printf("");
-    }
-    printf("\n");
+            }else if(strncmp(opcode, optab[0].len,6)!=0){
+                for(int k=0; k<sizeof(optab); k++){
+                    if(strncmp(opcode,optab[k].len,6)==0){ //opcode == optab
+                    printf("Opc:%s, Fct:%s, Inst:%s ",  optab[k].pt,functab[k].pt,functab[k].name);
+                    }
+                    }
+                    }else{
+                        printf("");
+                        }
+                        }
+                        printf("\n");
 
-    }
 }
-
 void memoryWrite(unsigned int addr, unsigned int data)
 {
     unsigned char i1, i2, i3, i4;
@@ -111,17 +110,15 @@ void memoryWrite(unsigned int addr, unsigned int data)
             i2 = (data >> 8) & 255;
             i3 = (data >> 16) & 255;
             i4 = (data >> 24) & 255;
-            // printf("%02x %02x %02x %02x\n",i1, i2,i3,i4);
             MEM[addr] = i1;
             MEM[addr+1] = i2;
             MEM[addr+2] = i3;
             MEM[addr+3] =i4;
-            // printf("%02x %02x %02x %02x\n",MEM[addr], MEM[addr+1], MEM[addr+2], MEM[addr+3]);
 }
 }
 
 int main(void){
-  FILE *pFile = fopen("as_ex01_arith.bin", "rb");
+  FILE *pFile = fopen("as_ex04_fct.bin", "rb");
   int count;
   unsigned int data;
   unsigned int exdata;
@@ -141,7 +138,7 @@ int main(void){
       break;
 
     exdata = invertEndian(data);
-    // printf("%08x\n", exdata);
+
     memoryWrite(cnt,data);
     memoryRead(cnt,exdata);
     cnt+=4;
