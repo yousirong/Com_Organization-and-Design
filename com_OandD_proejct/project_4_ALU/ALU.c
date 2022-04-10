@@ -1,29 +1,13 @@
+// ALU 201904458 이준용
 #include <stdio.h>
 #include <stdlib.h>
 
 int ALU(int X, int Y, int C, int* Z);
-int logicOperation(int X, int Y, int C);
-int addSubstract(int X, int Y, int C);
-int shiftOperation(int V, int Y, int C);
-int checkZero(int S);
+int checkZero(int Oa);
 int checkSetLess(int X, int Y);
-
-int main() {
-    void test();
-}
-
-void test(){
-    int x, y, s, z;
-
-    x = 01010101; //예시
-    y = 11110000;
-
-    printf("x : %8x, y : %8x\n", x, y);
-    for (int i = 0; i < 16; i++) {
-        s = ALU(x, y, i, &z);
-        printf("s : %8x, z : %8x\n", s, z);
-    }
-}
+int logicOperation(int X, int Y, int s1s0);
+int shiftOperation(int V, int Y, int s1s0);
+int addSubstract(int X, int Y, int s0);
 
 int ALU(int X, int Y, int C, int *Z)
 {
@@ -32,97 +16,143 @@ int ALU(int X, int Y, int C, int *Z)
 
     c32 = (C >> 2) & 3; //2보다 크고 11이랑 and 연산한 값을 c32에다 저장
     c10 = C & 3;
+    // printf("%8x  %8x  ",c32,c10);
     if (c32 == 0) {
+        // printf("shiftOperation");
         ret = shiftOperation(X, Y, c10);
     }
-    else if (c32 == 1) {
+    else if (c32 == 1 && c10 ==1) {
+        // printf("checkSetLess");
+
+        int Oa = addSubstract(X, Y, c10);
+        int Zero = checkZero(Oa);
+        Z = &Zero;
+            // printf("%d    %d\n", Zero,Z);
         ret = checkSetLess(X, Y);
+
     }
-    else if (c32 == 2) {
-        *Z = 1;
-        ret = addSubstract(X, Y, C);
+    else if (c32 == 2 && c10 < 2) {
+
+        // printf("addSubstract");
+        ret = addSubstract(X, Y, c10);
     }
-    else {
+    else if(c32 == 3){
+        // printf("logicOperation");
         ret = logicOperation(X, Y, c10);
+    }
+    else{
+        ret= -1;
     }
     return ret;
 }
 
-int logicOperation(int X, int Y, int C)
+int logicOperation(int X, int Y, int s1s0)  // 0 and 1 or  2 xor 3 nor
 {
-    if (C < 0 || C > 3) {
+    if (s1s0 < 0 || s1s0 > 3) {
         printf("error in logic operation\n");
         exit(1);
     }
-    if (C == 0) //AND
+    if (s1s0 == 0) //AND
         return X & Y;
-    else if (C == 1)//OR
+    else if (s1s0 == 1)//OR
         return X | Y;
-    else if (C == 2)//XOR
+    else if (s1s0 == 2)//XOR
         return X ^ Y;
     else//NOR
         return ~(X | Y);
 }
 
-int addSubstract(int X, int Y, int C) {
+int shiftOperation(int V, int Y, int s1s0) { //s1s0에 2비트 값이 들어감(0,1,2,3)
     int ret;
-    if (C < 0 || C > 1) {
-        printf("error in add/substract operation\n");
-        exit(1);
-    }
-    if (C == 0) { //add
-
-        ret = X | Y;
-    }
-    else {//substract
-
-        ret = (X | (~Y + 1));
-    }
-    return ret;
-}
-
-int shiftOperation(int V, int Y, int C) { //C에 2비트 값이 들어감(0,1,2,3)
-    int ret;
-    if (C < 0 || C > 3) {
+    if (s1s0 < 0 || s1s0 > 3) {
         printf("error in shift operation\n");
         exit(1);
     }
-    if (C == 0) {//No shift
+    if (s1s0 == 0) {//No shift
+        // printf("no shift");
         ret = Y; //shift가 일어나지 않으므로 비트 이동 없이 Y값 그대로 출력
     }
-    else if (C == 1) {//Logical left
-        Y = Y >> V;
+    else if (s1s0 == 1) {//Shift Logical left
+        //printf("sll");
+        Y = Y << V;
         ret = Y; //Y를 V비트 만큼 왼쪽으로 이동
     }
-    else if (C == 2) {//Logical right
-        Y = Y << V;
+    else if (s1s0 == 2) {//Shift Logical right
+        // printf("slr");
+        Y = Y >> V;
         ret = Y; //Y를 V비트 만큼 오른쪽으로 이동
     }
-    else {//Arith right 부호있는 상수도
-        Y = Y << V; //MSB를 비교하여 0이나 1을 추가해주어야 하는 부분을 모르겠습니다.
+    else { //Shift Logical arithmetic
+        // printf("sra");
+        for(int i=0; i<V;i++){
+            Y = Y >> 1;
+            Y = Y | 0x80000000;
+        }
         ret = Y;
     }
     return ret;
 }
-
-int checkZero(int S) {
+int addSubstract(int X, int Y, int s0) {
     int ret;
-    if (S == 0) {
-        return 1;
+    // printf("Add/sub");
+    if (s0 < 0 || s0 > 1) {
+        printf("error in add/substract operation\n");
+        exit(1);
     }
-    else {
-        return 0;
+    if (s0 == 0) { //add  -> 0
+        ret = X | Y;
+
+    }
+    else if(s0 == 1 ) {//substract -> 1
+
+        // ret = (X | (~Y) );
+        ret = X - Y;
     }
     return ret;
+}
+int checkZero(int Z) {
+    int Zero;
+    // printf("checkZero");
+    int res = Z >> 31;
+    //printf("MSB == %d\n ", res);
+    if (res == 0) { // add/sub결과가 0이면 1아니면 0
+        Zero =1;
+    }
+    else {
+        Zero =0;
+    }
+    return Zero;
 }
 
 int checkSetLess(int X, int Y) {
     int ret;
+    // printf("checksetless");
     if (X < Y) {
-        return 1;
+        ret =1;
     }
     else {
-        return 0;
+        ret =0;
     }
     return ret;
+}
+void test(){
+    int x, y, s, z;
+
+    x = 00010010;
+    y = 00001001;
+
+    printf("x : %8x, y : %8x\n", x, y);
+    for (int i = 0; i < 16; i++) {
+        s = ALU(x, y, i, &z);
+        if(s!= (-1)){
+            printf("s : %8x, z : %8x\n", s, z);
+        }
+    }
+
+}
+
+int main() {
+    test();
+
+    return 0;
 }
