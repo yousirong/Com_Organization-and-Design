@@ -138,8 +138,8 @@ int checkSetLess(int X, int Y) {
 void test(){
     int x, y, s, z;
 
-    x = 00010010;
-    y = 00001001;
+    x = 00110110;
+    y = 01101101;
 
     printf("x : %8x, y : %8x\n", x, y);
     for (int i = 0; i < 16; i++) {
