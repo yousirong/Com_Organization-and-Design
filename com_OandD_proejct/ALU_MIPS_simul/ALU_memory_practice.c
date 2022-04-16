@@ -28,7 +28,7 @@ int MEM(unsigned int A, int V, int nRW, int S)
 		pM = stackMEM;
 		printf(" -> Stack Area");
 	}
-// ì´ì™¸ì˜ ë©”ëª¨ë¦¬ëŠ” address busì— í•´ë‹¹ ì•ˆë¨.
+// ÀÌ¿ÜÀÇ ¸Þ¸ð¸®´Â address bus¿¡ ÇØ´ç ¾ÈµÊ.
 	else
 	{
 		printf(" - No Pyysical memory \n");
@@ -43,18 +43,18 @@ int MEM(unsigned int A, int V, int nRW, int S)
 	else if (S == 1)
 	{
 		printf(" | half word(16bits)\n");
-		if (A % 2 != 0) printf("ê²½ê³ : ì‹œìž‘ ì£¼ì†Œê°€ 2ì˜ ë°°ìˆ˜ê°€ ì•„ë‹™ë‹ˆë‹¤.\n");
+		if (A % 2 != 0) printf("°æ°í: ½ÃÀÛ ÁÖ¼Ò°¡ 2ÀÇ ¹è¼ö°¡ ¾Æ´Õ´Ï´Ù.\n");
 		V = V & 0xFFFF;
 	}
 	else if (S == 2)
 	{
 		printf(" | word(32bits)\n");
-		if (A % 4 != 0) printf("ê²½ê³ : ì‹œìž‘ ì£¼ì†Œê°€ 4ì˜ ë°°ìˆ˜ê°€ ì•„ë‹™ë‹ˆë‹¤.\n");
+		if (A % 4 != 0) printf("°æ°í: ½ÃÀÛ ÁÖ¼Ò°¡ 4ÀÇ ¹è¼ö°¡ ¾Æ´Õ´Ï´Ù.\n");
 		V = V & 0xFFFFFFFF;
 	}
 	else
 	{
-		printf("\n Unit sizeë¥¼ ë‹¤ì‹œ ì„¤ì •í•´ì£¼ì„¸ìš”. \n");
+		printf("\n Unit size¸¦ ´Ù½Ã ¼³Á¤ÇØÁÖ¼¼¿ä. \n");
 		return 0;
 	}
 //nRW: 0-> Read, 1-> Write
@@ -85,7 +85,7 @@ int MEM(unsigned int A, int V, int nRW, int S)
 		}
 		else
 		{
-			printf("í”„ë¡œê·¸ëž¨ ì˜¤ë¥˜!\n");
+			printf("ÇÁ·Î±×·¥ ¿À·ù!\n");
 			return 0;
 		}
 	}
@@ -117,7 +117,7 @@ int MEM(unsigned int A, int V, int nRW, int S)
 		}
 		else
 		{
-			printf("í”„ë¡œê·¸ëž¨ ì˜¤ë¥˜!\n");
+			printf("ÇÁ·Î±×·¥ ¿À·ù!\n");
 			return 0;
 		}
 	}
