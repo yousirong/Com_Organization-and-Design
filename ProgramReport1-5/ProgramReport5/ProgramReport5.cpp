@@ -1,4 +1,42 @@
-﻿// ProgramReport5.cpp : 이 파일에는 'main' 함수가 포함됩니다. 거기서 프로그램 실행이 시작되고 종료됩니다.
+﻿/*
+CPU의 ALU를 시뮬레이션 하는 ALU 함수를 프로그램으로 구현한다.
+ALU 동작
+Arithmetic + Logic + Shift 연산에 대한 결과를 출력
+피연산자(operand)와 연산자(operator)를 입력 받아 해당 연산의 결과 출력
+연산 결과에 대한 상태 정보(N, Z, C, V)를 출력
+ALU 함수 구현: int ALU(int X, int Y, int S, int *Z);
+Input: 32-bit X, Y, 4-bit S(selection)
+입력은 두개의 피연산자 데이터와 연산자를 나타내는 제어 값으로 구성
+입력은 32비트 정수값 X, Y, 그리고 제어를 위한 S는 4 비트이지만 정수로 구현
+Output: 32-bit O, 1-bit Z(ero)
+연산자 종류에 따른 출력 값과 add/sub 연산 결과가 0인지를 나타내는 Z 값
+Z = 1 if O == 0, Z = 0 else
+HW는 1 비트이지만 32비트에 저장
+연산 결과 값 O는 ALU 함수에서 정수로 반환하고 Z 값은 포인터를 이용하여 반환
+
+구현 절차
+ALU 하드웨어 구성과 유사하게 모듈 단위로 함수를 구현하고 전체를 구현
+int logicOperation(int X, int Y, int s1s0);
+논리 연산을 담당하는 함수 if S3S2 == 0b11
+s1s0에 따라서 AND, OR, XOR, NOR
+int shiftOperation(int X, int Y, int s1s0);
+시프트 연산을 담당하는 함수 if S3S2 == 0b00
+s1s0에 따라서 No shift, SLL, SRL, SRA
+int addSubtract(int X, int Y, int s0);
+산술연산을 담당하는 함수 if S3S2 == 0b10 or S3S2 == 0b01
+s0에 따라서 ADD, SUB
+int checkSetLess (int X, int Y);
+less than을 검사하는 함수 if S3S2 == 0b01
+LT(<) = 1 if X < Y: addSubtract() 함수를 이용하여 빼기를 수행하고 반환값의 MSB를 반환한다.
+int checkZero(int Oa);
+Add/Sub 모듈의 연산 결과가 0인지 검사하는 함수
+ZERO = 1 if Oa == 0, else ZERO = 0
+구현된 모듈 함수들을 이용하여 ALU 전체 함수를 구현한다.
+int ALU(int X, int Y, int S, int *Z);
+
+*/
+
+// ProgramReport5.cpp : 이 파일에는 'main' 함수가 포함됩니다. 거기서 프로그램 실행이 시작되고 종료됩니다.
 //
 
 #include "stdio.h"
@@ -12,7 +50,7 @@ int addSubtract(int X, int Y, int C) {
 	}
 	if (C == 0)
 		return X + Y;
-	else              
+	else
 		return X - Y;
 }
 
@@ -26,9 +64,9 @@ int logicOperation(int X, int Y, int C)
 
 	if (C == 0)
 		return X & Y;	// bitwise-AND
-	else if (C == 1)	
+	else if (C == 1)
 		return X | Y;   // bitwise-OR
-	else if (C == 2)	
+	else if (C == 2)
 		return X ^ Y;   // bitwise-XOR
 	else
 		return ~(X | Y); // bitwise-NOR

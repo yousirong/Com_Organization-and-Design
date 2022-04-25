@@ -1,4 +1,40 @@
-﻿// ProgramReport3.cpp : 이 파일에는 'main' 함수가 포함됩니다. 거기서 프로그램 실행이 시작되고 종료됩니다.
+﻿/*
+2. Binary file (xxx.bin) 파일에서 명령어를 읽어 메모리에 저장하고 각각이 어떤 명령어인지를 하나씩 해석하는 프로그램을 작성한다.
+이진 파일에 대해 이해하고 파일 접근 라이브러리 함수를 이해한다.
+프로그램의 메모리 로드에 대해 이해한다.
+Little-endian과 Big-endian에 대해 이해한다.
+명령어 코딩 포맷에 대해 이해한다.
+
+프로그램 작성을 위한 필요 지식
+이진 파일 및 실행 이미지 파일 구조 이해
+이진 파일에 대한 이해는 과제2를 참조, 실행 이미지 구조는 뒤에서 설명
+메모리 정렬(Alignment)과 Endian 이해
+2주차 강의와 과제 참조
+C로 메모리 모델링하는 방법 이해
+뒤에서 설명
+명령어 코딩에 대한 이해
+2주차 강의 자료
+
+
+C로 메모리를 모델링하기 위하여 unsinged char의 배열로 선언한다.
+메모리의 논리적 형태를 모델링
+Ex) unsigned char MEM[M_SIZE]; 2^10이므로 10bit쓰고 나머지는 0000으로 저장
+M_SIZE: 제공되는 input file의 명령어를 모두 저장할 수 있게 크게 한다.
+ex) const int M_SIZE = 1024;
+배열의 인덱스가 MEM을 접근하기 위한 주소가 된다.
+메모리를 word 단위로 읽고 쓰는 함수를 작성한다: 물리적 메모리 접근 모델링
+unsigned int memoryRead(unsigned int addr);
+void memoryWrite(unsigned int addr, unsigned int data);
+각 함수에서 입력 받은 addr이 aligned access 인지 검사하고 aligned access가 아닐 경우에는 오류 메시지를 출력하고 addr을 aligned access가 되도록 주소를 교정하여 MEM을 access한다.
+# 4의배수인지 아닌지
+addr이 4의 배수가 되도록 주소를 truncate 시킨다: & 와 상수 사용
+MEM 상에서 4-byte 데이터는 big-endian으로 저장되어 접근되어야 한다.
+Ex) 0xAABBCCDD 가 메모리 8번지에 저장된다면
+MEM[8]: 0xAA, MEM[9]: 0xBB, MEM[10]: 0xCC, MEM[11]: 0xDD 가 저장
+
+*/
+
+// ProgramReport3.cpp : 이 파일에는 'main' 함수가 포함됩니다. 거기서 프로그램 실행이 시작되고 종료됩니다.
 //
 
 #include "stdio.h"

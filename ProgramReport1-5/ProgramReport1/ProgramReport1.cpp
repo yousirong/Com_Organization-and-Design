@@ -1,4 +1,15 @@
-﻿
+﻿/*
+두개의 정수를 받아 연산자를 테스트하는 함수를 작성한다.
+void testOperator(int x, int y)
+인수로 받은 두 정수를 hexa 값으로 표시하고  논리 연산과 shift 연산을 수행하여 그 결과 값을 표시한다.
+main 함수에서 정수 데이터 x, y를 선언한다.
+5번의 루프를 돌면서 x, y를 random 값으로 설정한다.
+설정한 값으로 testOperator(x, y)를 호출한다.
+
+*/
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 

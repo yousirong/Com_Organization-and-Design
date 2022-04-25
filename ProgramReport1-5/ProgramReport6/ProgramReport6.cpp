@@ -1,4 +1,48 @@
-﻿// ProgramReport6.cpp : 이 파일에는 'main' 함수가 포함됩니다. 거기서 프로그램 실행이 시작되고 종료됩니다.
+﻿/*
+MIPS processor has 32 bits address bus  4 GiB address space
+Aligned and Big-endian
+Implement a memory system for MIPS processor
+Assume the physical memory has 3 MiB totally
+Text: 1 MiB (0x00400000~0x004FFFFF)
+Data: 1 MiB (0x10000000~0x100FFFFF)
+Stack: 1 MiB (0x7FF00000~0x7FFFFFFF)
+Write a program that simulate the physical memory
+int MEM(unsigned int A, int V, int nRW, int S);
+32bit  nrw 1bitsignal 1 invert 0 active
+A: memory address
+V: write value
+nRW: 0 Read, 1 Write
+S(Size): 0Byte, 1Half word, 2 Word
+3 static char arrays of 1 MiB internally
+Each array corresponds to each physical memory
+Using MEM() with address, each S size data can be accessed
+When Read: ignore V, use return data
+When Write: V is written to address, ignore return
+
+메모리 동작
+바이트 단위로 주소를 가지고 있으며 메모리는 물리적으로 4 개의 바이트 단위로 접근된다.
+
+
+구현에 있어 내부적으로 주소를 변환해서 접근함
+워드 접근: A & 0xffff_fffc 로 새로 주소 구함
+반워드 접근: A & 0xffff_fffe 로 주소 변환
+바이트: A 사용
+메모리는 물리적으로 하위 두 비트는 사용 안함
+반워드/바이트 경우 프로세서가 하위 비트 사용
+MIPS는 aligned access를 하기 때문에
+lw/sw에서 만들어 지는 주소: 하위 두 비트가00 임
+lh/sh에서 만들어 지는 주소: 하위 한 비트가0 임
+
+Read/Write의 각 경우를 검증할 수 있는 검사 프로그램을 만들어  MEM()을 검증한다.
+lb/lbu/sb, lh/lhu/sh, lw/sw
+memory boundary access
+0x0040000, 0x004FFFFF
+0x1000000, 0x100FFFFF
+0x7FF0000, 0x7FFFFFFF
+
+*/
+
+// ProgramReport6.cpp : 이 파일에는 'main' 함수가 포함됩니다. 거기서 프로그램 실행이 시작되고 종료됩니다.
 //
 
 #include "stdio.h"
@@ -30,7 +74,7 @@ int MEM(unsigned int A, int V, int nRW, int S) {
 		exit(1);
 	}
 
-	memSelect = A >> 20;   
+	memSelect = A >> 20;
 	offset = A & 0xFFFFF;
 	if (memSelect == 0x004) pM = progMEM;         // program memory
 	else if (memSelect == 0x100) pM = dataMEM;  // data memory
