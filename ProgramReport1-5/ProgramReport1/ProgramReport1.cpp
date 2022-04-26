@@ -8,8 +8,6 @@ main 함수에서 정수 데이터 x, y를 선언한다.
 
 */
 
-
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -17,12 +15,10 @@ main 함수에서 정수 데이터 x, y를 선언한다.
 // call rand() four times cause rand() generates a random number from 0 to 2^15-1
 unsigned int rand32bit() {
 	unsigned int t;
-
 	t = rand() % 256;	// make 0 <= t < 256
 	t = (t << 8) | (rand() % 256); // 16 bit random number
 	t = (t << 8) | (rand() % 256); // 24 bit random number
 	t = (t << 8) | (rand() % 256); // 32 bit random number
-
 	return t;
 }
 
