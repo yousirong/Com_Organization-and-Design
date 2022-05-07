@@ -9,7 +9,7 @@
 const int check = 1;
 
 static FILE* pFile = NULL;
-static errno_t err;
+//static errno_t err;
 static int continueTask = 1;
 
 /*각 format에 따른 구조체 형식이다. 강의자료 참고함.
@@ -76,7 +76,7 @@ int MEM(unsigned int A, int V, int nRW, int S) {
 		printf("No memory\n");
 		// 에러 케이스 테스트를 위해 전체 프로그램을 종료하지 않고
 		// 함수만 종료한다
-		return;
+		return 1;
 	}
 
 	if (S == 0) {
@@ -91,7 +91,7 @@ int MEM(unsigned int A, int V, int nRW, int S) {
 		}
 		else {
 			printf("nRW input error\n");
-			return;
+			return 1;
 			//exit(1);
 		}
 	}
@@ -100,7 +100,7 @@ int MEM(unsigned int A, int V, int nRW, int S) {
 		if (offset % 2 != 0)	// Half-word-aligned Check
 		{
 			printf("Not an half-word-aligned address input!\n");
-			return;
+			return 1;
 			//exit(1);
 		}
 		if (nRW == 0) {
@@ -115,7 +115,7 @@ int MEM(unsigned int A, int V, int nRW, int S) {
 		}
 		else {
 			printf("nRW input error\n");
-			return;
+			return 1;
 			//exit(1)
 		}
 	}
@@ -124,7 +124,7 @@ int MEM(unsigned int A, int V, int nRW, int S) {
 		if (offset % 4 != 0)	// Word-aligned Check
 		{
 			printf("Not an word-aligned address input!\n");
-			return;
+			return 1;
 			//exit(1)
 		}
 		if (nRW == 0) {
@@ -141,13 +141,13 @@ int MEM(unsigned int A, int V, int nRW, int S) {
 		}
 		else {
 			printf("nRW input error\n");
-			return;
+			return 1;
 			//exit(1)
 		}
 	}
 	else {//S가 유효하지 않은 값일 경우 오류처리
 		printf("Size input error\n");
-		return;
+		return 1;
 		//exit(1)
 	}
 }
@@ -349,9 +349,11 @@ void openBinaryFile(char* filePath) {
 	//err = fopen_s(&pFile, "as_ex03_ifelse.bin", "rb");
 
 	// File Validation TEST
-	FILE* testFile = NULL;
-	err = fopen_s(&testFile, filePath, "rb");
-	if (err) {
+
+    // FILE* testFile = NULL;
+    //--------------------------------------------------------이부분 고치기 file 못읽음
+	FILE* testFile = fopen( filePath, "rb");
+	if (testFile == NULL) {
 		printf("Cannot open file\n");
 		return 1;
 	}
