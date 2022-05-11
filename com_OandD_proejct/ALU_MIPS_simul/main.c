@@ -37,20 +37,20 @@ union itype {
 	}JI;
 }IR;
 
-void openBinaryFile(char* filePath);
-unsigned int To_BigEndian(unsigned int x);
-unsigned char getOp(int opc);
+void openBinaryFile(char* filePath);   // l 명령어 실행시 filePath를 받아서 바이너리 파일 여는 함수
+unsigned int To_BigEndian(unsigned int x);  // 빅엔디안 변경 함수 => hex값
+unsigned char getOp(int opc);  // opcode 확인 함수
 // binary to decimal 한 값을 int값으로 저장함
-unsigned char* getInstName(int opc, int fct, int* isImmediate);
-void instExecute(int opc, int fct, int* isImmediate);
-
+unsigned char* getInstName(int opc, int fct, int* isImmediate);   // debugging 함수
+void instExecute(int opc, int fct, int* isImmediate);   // instruction 실행함수
+int MEM(unsigned int A, int V, int nRW, int S); // memory access함수
 // ALU
 int logicOperation(int X, int Y, int C);
 int addSubtract(int X, int Y, int C);
 int shiftOperation(int V, int Y, int C);
 int checkZero(int S);
 int checkSetLess(int X, int Y);
-int ALU(int X, int Y, int C, int* Z);
+int ALU(int X, int Y, int C, int* Z);   // R-format 명령어에서 ALU함수 필요
 
 static unsigned char progMEM[0x100000], dataMEM[0x100000], stakMEM[0x100000];
 
