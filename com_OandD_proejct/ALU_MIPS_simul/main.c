@@ -257,10 +257,10 @@ simulator명령은 I/j/g/s/m/r/x/sr/sm으로 구성된다.*/
 					else {
 						char* end = ptr;
 
-						unsigned int startAddr = strtol(start, NULL, 16);
-						unsigned int endAddr = strtol(end, NULL, 16);
+						unsigned int start_Addr = strtol(start, NULL, 16);
+						unsigned int end_Addr = strtol(end, NULL, 16);
 
-						for (unsigned int i = startAddr; i <= endAddr; i = i + 4) {
+						for (unsigned int i = start_Addr; i <= end_Addr; i = i + 4) {
 							printf("[0x%08x] => 0x%x\n", i, MEM(i, NULL, 0, 2));
 						}
 					}
@@ -276,7 +276,7 @@ simulator명령은 I/j/g/s/m/r/x/sr/sm으로 구성된다.*/
 				exit(1);
 				break;
 			default:
-				printf("Error: Invalid command arguments.\n");
+				printf("Error: Invalid enough command arguments.\n");
 				break;
 			}
 		}
@@ -301,9 +301,18 @@ simulator명령은 I/j/g/s/m/r/x/sr/sm으로 구성된다.*/
 						printf("ex) sr 1 20\n");
 					}
 					else {
+					regNum = ptr;
+					// ptr은 value 문자열을 가리킨다.
+					ptr = strtok(NULL, " ");
+					if (ptr == NULL) {
+						printf("Error: Not enough arguments.\n");
+						printf("ex) sr 1 20\n");
+					}
+					else {
 						regVal = ptr;
 						setRegister(atoi(regNum), strtol(regVal, NULL, 16));
 					}
+				}
 				}
 			}
 			else if (strcmp(cmdCode, "sm") == 0) {
