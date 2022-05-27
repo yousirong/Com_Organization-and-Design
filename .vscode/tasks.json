@@ -3,12 +3,19 @@
   "runner": "terminal",
   "type": "shell",
   "echoCommand": true,
-  "presentation": { "reveal": "always" },
+  "presentation": {
+    "reveal": "always"
+  },
   "tasks": [
     {
       "label": "save and compile for C++",
       "command": "g++",
-      "args": ["${file}", "-o", "${fileDirname}/${fileBasenameNoExtension}"],
+      "args": [
+        "${file}",
+        "-g",
+        "-o",
+        "${fileDirname}/${fileBasenameNoExtension}"
+      ],
       "group": "build",
       "problemMatcher": {
         "fileLocation": ["relative", "${workspaceRoot}"],
@@ -25,7 +32,12 @@
     {
       "label": "save and compile for C",
       "command": "gcc",
-      "args": ["${file}", "-o", "${fileDirname}/${fileBasenameNoExtension}"],
+      "args": [
+        "${file}",
+        "-g",
+        "-o",
+        "${fileDirname}/${fileBasenameNoExtension}"
+      ],
       "group": "build",
       "problemMatcher": {
         "fileLocation": ["relative", "${workspaceRoot}"],
@@ -44,6 +56,27 @@
       "command": "cmd",
       "group": "test",
       "args": ["/C", "${fileDirname}\\${fileBasenameNoExtension}"]
+    },
+    {
+      "type": "cppbuild",
+      "label": "C/C++: g++.exe 활성 파일 빌드",
+      "command": "C:/mingw64/bin/g++.exe",
+      "args": [
+        "-fdiagnostics-color=always",
+        "-g",
+        "${file}",
+        "-o",
+        "${fileDirname}\\${fileBasenameNoExtension}.exe"
+      ],
+      "options": {
+        "cwd": "C:/mingw64/bin"
+      },
+      "problemMatcher": ["$gcc"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "detail": "디버거에서 생성된 작업입니다."
     }
   ]
 }
